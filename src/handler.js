@@ -190,7 +190,7 @@ const editBookById = async ({payload, params}, h) => {
   } else if (bookIndex === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Buku gagal dihapus. Id tidak ditemukan',
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.statusCode = 404;
     return response;
@@ -252,7 +252,7 @@ const deleteBookById = async ({params}, h) => {
   if (bookIndex === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbarui buku. Id tidak ditemukan',
+      message: 'Buku gagal dihapus. Id tidak ditemukan',
     });
     response.statusCode = 404;
     return response;
