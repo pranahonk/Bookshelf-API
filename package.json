@@ -9,10 +9,11 @@
     "nodemon": "^2.0.16"
   },
   "scripts": {
-    "start": "nodemon ./src/server.js",
+    "dev": "nodemon ./src/server.js",
+    "start": "node ./src/server.js",
     "lint": "eslint ./"
   },
-  "name": "bookshelf-api",
+  "name": "submission",
   "description": "bookshelf api for dicoding",
   "version": "1.0.0",
   "main": "server.js",

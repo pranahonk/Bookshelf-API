@@ -1,15 +1,15 @@
 // const {nanoid} = require('nanoid');
 // const books = require('./books.json');
-const fs = require('fs');
-const path = require('path');
-
+// const fs = require('fs');
+// const path = require('path');
+const books = require('./database');
 
 const showAllBook = (request, h) => {
-  const filePath = path.join(__dirname, 'books.json');
+  // const filePath = path.join(__dirname, 'books.json');
 
   try {
-    const data = fs.readFileSync(filePath, 'utf8');
-    const books = JSON.parse(data);
+    // const data = fs.readFileSync(filePath, 'utf8');
+    // const books = JSON.parse(data);
 
     const allBooks = books.map((book) => ({
       id: book.id,
@@ -40,18 +40,18 @@ const showAllBook = (request, h) => {
 
 const getBookById = async ({params}, h) => {
   const {id} = params;
-  const filePath = path.join(__dirname, 'books.json');
+  // const filePath = path.join(__dirname, 'books.json');
 
   try {
-    const data = await fs.promises.readFile(filePath, 'utf8');
-    const books = JSON.parse(data);
+    // const data = await fs.promises.readFile(filePath, 'utf8');
+    // const books = JSON.parse(data);
 
     const book = books.find((book) => book.id.toString() === id);
 
     if (book === undefined) {
       const response = h.response({
         status: 'fail',
-        message: 'Book not found',
+        message: 'Buku tidak ditemukan',
       });
       response.statusCode = 404;
       return response;
@@ -109,10 +109,10 @@ const postNewBook = async ({payload}, h) => {
   }
 
   try {
-    const filePath = path.join(__dirname, 'books.json');
-    const data = await fs.promises.readFile(filePath, 'utf8');
-    const books = JSON.parse(data);
-    const id = parseInt(books[books.length - 1]?.id) + 1;
+    // const filePath = path.join(__dirname, 'books.json');
+    // const data = await fs.promises.readFile(filePath, 'utf8');
+    // const books = JSON.parse(data);
+    const id = parseInt((books[books.length - 1]?.id) ?? 0) + 1;
 
     const newBook = {
       id,
@@ -129,13 +129,13 @@ const postNewBook = async ({payload}, h) => {
       updatedAt,
     };
     books.push(newBook);
-    const updatedData = JSON.stringify(books, null, 2);
-
-    fs.writeFileSync(filePath, updatedData, 'utf8');
+    // const updatedData = JSON.stringify(books, null, 2);
+    //
+    // fs.writeFileSync(filePath, updatedData, 'utf8');
 
     const response = h.response({
       status: 'success',
-      message: 'Book successfully added',
+      message: 'Buku berhasil ditambahkan',
       data: {
         bookId: newBook.id,
       },
@@ -167,30 +167,30 @@ const editBookById = async ({payload, params}, h) => {
   } = payload;
   const {id} = params;
   const updatedAt = new Date().toISOString();
-  const filePath = path.join(__dirname, 'books.json');
-  const data = await fs.promises.readFile(filePath, 'utf8');
-  const books = JSON.parse(data);
+  // const filePath = path.join(__dirname, 'books.json');
+  // const data = await fs.promises.readFile(filePath, 'utf8');
+  // const books = JSON.parse(data);
   const bookIndex = books.findIndex((book) => book.id === parseInt(id));
   const finished = pageCount === readPage;
 
   if (name === undefined) {
     const response = h.response({
       status: 'fail',
-      message: 'Fail to update the books, fill the name',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
     });
     response.statusCode = 400;
     return response;
   } else if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
-      message: 'Fail to update the books, cannot have more read pages than the total page count',
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.statusCode = 400;
     return response;
   } else if (bookIndex === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Fail to update the books, book not found',
+      message: 'Buku gagal dihapus. Id tidak ditemukan',
     });
     response.statusCode = 404;
     return response;
@@ -212,21 +212,21 @@ const editBookById = async ({payload, params}, h) => {
         finished,
       };
 
-      const filePath = path.join(__dirname, 'books.json');
-      const updatedData = JSON.stringify(books, null, 2);
-
-      fs.writeFileSync(filePath, updatedData, 'utf8');
+      // const filePath = path.join(__dirname, 'books.json');
+      // const updatedData = JSON.stringify(books, null, 2);
+      //
+      // fs.writeFileSync(filePath, updatedData, 'utf8');
 
       const response = h.response({
         status: 'success',
-        message: 'Book updated!',
+        message: 'Buku berhasil diperbarui',
       });
       response.statusCode = 200;
       return response;
     } else {
       const response = h.response({
         status: 'fail',
-        message: 'Fail to update the books, id not found',
+        message: 'Gagal memperbarui buku. Mohon isi nama buku',
       });
       response.statusCode = 404;
       return response;
@@ -234,7 +234,7 @@ const editBookById = async ({payload, params}, h) => {
   } catch (error) {
     const response = h.response({
       status: 'error',
-      message: 'Failed to update the book',
+      message: 'Gagal memperbarui buku',
     });
     response.statusCode = 500;
     return response;
@@ -244,15 +244,15 @@ const editBookById = async ({payload, params}, h) => {
 
 const deleteBookById = async ({params}, h) => {
   const {id} = params;
-  const filePath = path.join(__dirname, 'books.json');
-  const data = await fs.promises.readFile(filePath, 'utf8');
-  const books = JSON.parse(data);
-  const bookIndex = books.findIndex((book) => book.id === id);
+  // const filePath = path.join(__dirname, 'books.json');
+  // const data = await fs.promises.readFile(filePath, 'utf8');
+  // const books = JSON.parse(data);
+  const bookIndex = books.findIndex((book) =>book.id === parseInt(id));
 
   if (bookIndex === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Fail to remove book, id not found',
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.statusCode = 404;
     return response;
@@ -260,21 +260,21 @@ const deleteBookById = async ({params}, h) => {
 
   try {
     books.splice(bookIndex, 1);
-    const filePath = path.join(__dirname, 'books.json');
-    const updatedData = JSON.stringify(books, null, 2);
-
-    fs.writeFileSync(filePath, updatedData, 'utf8');
+    // const filePath = path.join(__dirname, 'books.json');
+    // const updatedData = JSON.stringify(books, null, 2);
+    //
+    // fs.writeFileSync(filePath, updatedData, 'utf8');
 
     const response = h.response({
       status: 'success',
-      message: 'Successfully removed book',
+      message: 'Buku berhasil dihapus',
     });
     response.statusCode = 200;
     return response;
   } catch (error) {
     const response = h.response({
       status: 'error',
-      message: 'Failed to remove the book',
+      message: 'Berhasil menghapus Buku',
     });
     response.statusCode = 500;
     return response;
